@@ -1,0 +1,8 @@
+version: '3'
+services:
+  redis-server:  #this name is used as reference in Node-server to link between theese two.
+    image: 'redis' 
+  node-app:
+    build: ./ #builds Node server image from Dockerfile at this path
+    ports:
+      - "3001:3001" # localhost : port inside container
