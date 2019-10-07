@@ -1,0 +1,22 @@
+version: '3'                          # string**
+services:
+  web:                                # name of the react app i.e service
+    build:
+      context: .
+      dockerfile: Dockerfile.dev      # when we donot use default Dockerfile name, this is how we build.
+    ports:
+      - "3000:3000"
+    volumes:                          # volumes to sync, why ? explained in dockerfile.dev
+      - /app/node_modules
+      - .:/app
+  tests:                                # name of the react app i.e service
+    build:
+      context: .
+      dockerfile: Dockerfile.dev      # when we donot use default Dockerfile name, this is how we build.
+    volumes:                          # volumes to sync, why ? explained in dockerfile.dev
+      - /app/node_modules
+      - .:/app
+    command: ["npm","run","test"]
+
+# purpose is to simplify docker run. In here we are simplifying the docker run command.
+

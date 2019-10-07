@@ -1,0 +1,29 @@
+FROM node:alpine
+
+WORKDIR /app
+
+COPY package.json ./
+
+RUN npm install
+
+COPY . .
+
+CMD ["npm","run","start"]
+
+
+### EXECUTING INSTRUCTIONS ###
+#   use "docker build -f Dockerfile.dev ." instead of "docker build ."
+#   -f indicates file.
+#   delete node_modules folder before build. not required.
+
+### SET UP DEV ENV IN DOCKER AND ESTABLISH SYNC WITH THE LOCAL WORKSPACE ###
+#   COMMANDS :
+#   1. docker build -f Dockerfile.dev .
+#   2. docker run -p 3000:3000 -v /app/node_modules -v $(pwd):/app IMAGE_ID_GOT_FROM_STEP_1
+#   
+#   EXPLANATION:
+#   1 ==> build with this file
+#   2 ==> when we make changes in local WORKSPACE it doesn't directly reflect, so we have to map container WORKDIR to local WORKSPACE (-v $(presentworkingdirectory):/app)
+#         as the node_modules are not in the local WORKSPACE it throws error, so (-v /app/node_modules) => use node_modules that we built just now.
+#   
+#   COPY . . ==> not required now, but keep it there if you run (may be production build) without docker-compose.
