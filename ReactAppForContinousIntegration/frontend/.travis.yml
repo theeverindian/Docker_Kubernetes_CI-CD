@@ -1,0 +1,9 @@
+sudo: required                          # provide travis sudo permissions.
+services:                               # services travis need
+ - docker
+
+before_install:
+ - docker build -t ranjithcheguri/docker-react -f Dockerfile.dev .      # build and tag image(-t).
+  
+script:
+ - docker run ranjithcheguri/docker-react npm run test -- --coverage    # "-- --coverage" is to exit console after npm test, this return status is used by travis
