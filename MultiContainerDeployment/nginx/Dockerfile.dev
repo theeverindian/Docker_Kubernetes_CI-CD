@@ -1,0 +1,4 @@
+FROM nginx
+COPY ./default.conf /etc/nginx/conf.d/default.conf
+
+# docker file to create nginx server which has our upstream rules. (goto dockerhub nginx on where the Nginx file should be placed.

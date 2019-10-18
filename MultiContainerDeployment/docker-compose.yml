@@ -1,0 +1,48 @@
+version: '3'
+services:
+    postgres:
+        image: 'postgres:latest'
+    redis:
+        image: 'redis:latest'
+    nginx:
+        restart: always                         # recommended.
+        build: 
+            dockerfile: Dockerfile.dev
+            context: ./nginx
+        ports:
+            - '3050:80'                         # local port : container port
+    api:                                        # api ==> backend server, to avoid confusion between names api is used.
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./server
+        volumes:
+            - /app/node_modules                 # inside container donot try to override this folder, donot try to redirect access, leave folder as is.
+            - ./server:/app                     # except for the node modules, anytime the app tries to access /app it is redirected to server folder /app
+        environment:
+            - REDIS_HOST=redis                  # name of the hosting service, defined above
+            - REDIS_PORT=6379                   # default port
+            - PGUSER=postgres
+            - PGHOST=postgres                   # name defined above
+            - PGDATABASE=postgres
+            - PGPASSWORD=postgres_password
+            - PGPORT=5432
+        depends_on:
+            - postgres
+    client:
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./client
+        volumes:
+            - /app/node_modules
+            - ./client:/app
+    worker:
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./worker
+        volumes:
+            - /app/node_modules
+            - ./worker:/app
+        environment:
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+
